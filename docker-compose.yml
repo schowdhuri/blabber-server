@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  db:
+    image: yobasystems/alpine-mariadb
+    env_file: .env
+    ports:
+      - "3306:3306"
+    networks:
+      - openfire
+  openfire:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+      - "5222:5222"
+      - "5223:5223"
+      - "5229:5229"
+      - "5269:5269"
+      - "5275:5275"
+      - "7443:7443"
+      - "7777:7777"
+      - "7070:7070"
+    restart: always
+    networks:
+      - openfire
+    command: sh /usr/bin/start_openfire.sh
+    depends_on:
+      - db
+networks:
+  openfire: {}
