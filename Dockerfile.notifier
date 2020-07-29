@@ -1,0 +1,9 @@
+FROM node:12-alpine
+
+WORKDIR /usr/src/notifier
+COPY notifier/package.json .
+COPY notifier/yarn.lock .
+RUN yarn
+COPY notifier/tsconfig.* .
+COPY notifier/src/ .
+EXPOSE 8999

@@ -8,6 +8,18 @@ services:
       - "3306:3306"
     networks:
       - openfire
+  notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile.notifier
+    ports:
+      - "8999:8999"
+    restart: always
+    networks:
+      - openfire
+    command: node index.js
+    depends_on:
+      - db
   openfire:
     build:
       context: .

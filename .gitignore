@@ -1,2 +1,3 @@
 .env
 .env.*
+notifier/node_modules

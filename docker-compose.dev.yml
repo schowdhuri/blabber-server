@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+  db:
+    image: yobasystems/alpine-mariadb
+    env_file: .env
+    ports:
+      - "3306:3306"
+    networks:
+      - openfire
+  notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile.notifier
+    volumes:
+      - ./notifier/src:/usr/src/notifier/src
+      - /usr/src/notifier/node_modules
+    env_file: .env
+    ports:
+      - "8999:8999"
+    restart: always
+    networks:
+      - openfire
+    command: yarn start
+    depends_on:
+      - db
+  openfire:
+    build:
+      context: .
+      dockerfile: Dockerfile.openfire
+    ports:
+      - "9090:9090"
+      - "5222:5222"
+      - "5223:5223"
+      - "5229:5229"
+      - "5269:5269"
+      - "5275:5275"
+      - "7443:7443"
+      - "7777:7777"
+      - "7070:7070"
+    restart: always
+    networks:
+      - openfire
+    command: sh /usr/bin/start_openfire.sh
+    depends_on:
+      - db
+      - notifier
+networks:
+  openfire: {}
